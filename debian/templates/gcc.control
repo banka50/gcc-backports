@@ -1,0 +1,21 @@
+Package: @PKG_NAME@
+Version: @VERSION@
+Architecture: amd64
+Maintainer: @MAINTAINER@
+Depends: @SHLIBS_DEPENDS@, libc6-dev
+Suggests: @PKG_NAME@-dbgsym, @LIBDBG_PKG@
+Section: devel
+Priority: optional
+Homepage: https://gcc.gnu.org/
+Description: GNU Compiler Collection @GCC_VERSION@ for @DIST_PRETTY@, installed in @PREFIX@
+ GCC @GCC_VERSION@ (C, C++, Fortran, LTO) with its own GNU binutils
+ @BINUTILS_VERSION@, built on @DIST_PRETTY@ and installed into the
+ self-contained prefix @PREFIX@. It does not replace or touch the system
+ compiler, libstdc++6 or libgcc, and coexists with other gcc-N-opt packages.
+ .
+ Nothing is installed outside @PREFIX@ except documentation and gdb
+ auto-load scripts: call @PREFIX@/bin/gcc etc., or put @PREFIX@/bin on PATH.
+ .
+ Programs built with this compiler need the matching runtime libraries
+ from @PREFIX@/lib64 at run time: link with -static-libstdc++ -static-libgcc,
+ or add -Wl,-rpath,@PREFIX@/lib64.

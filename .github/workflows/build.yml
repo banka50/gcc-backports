@@ -1,0 +1,84 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write   # needed only to attach the .debs to a release on tags
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        dist: [buster, trixie]              # directories under dists/
+        toolchain: [gcc-15, gcc-16, gdb-18] # files under toolchains/
+    runs-on: ubuntu-24.04
+    # GitHub-hosted runners stop jobs at 6 h. A PGO + LTO GCC bootstrap on a
+    # 4-core runner may not fit; use a larger or self-hosted runner then.
+    timeout-minutes: 355
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Free disk space
+        # A GCC build needs ~25 GB; the stock runner image leaves less than that.
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          docker system prune -af
+          df -h /
+
+      - name: Build
+        run: make DIST=${{ matrix.dist }} TOOLCHAIN=${{ matrix.toolchain }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gcc-backports-${{ matrix.dist }}-${{ matrix.toolchain }}
+          path: |
+            out/${{ matrix.dist }}/${{ matrix.toolchain }}/*.deb
+            out/${{ matrix.dist }}/${{ matrix.toolchain }}/*.buildinfo.txt
+            out/${{ matrix.dist }}/${{ matrix.toolchain }}/SHA256SUMS
+            out/${{ matrix.dist }}/${{ matrix.toolchain }}/logs/
+          if-no-files-found: warn
+
+  test:
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        dist: [buster, trixie]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: gcc-backports-${{ matrix.dist }}-*
+          path: artifacts
+
+      - name: Arrange as out/<dist>/<toolchain>/
+        run: |
+          for d in artifacts/gcc-backports-${{ matrix.dist }}-*; do
+            tc=${d#artifacts/gcc-backports-${{ matrix.dist }}-}
+            mkdir -p out/${{ matrix.dist }}
+            mv "$d" out/${{ matrix.dist }}/$tc
+          done
+          ls -R out
+
+      - name: Install everything side by side and smoke-test
+        run: make DIST=${{ matrix.dist }} test
+
+      - name: Attach to release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \
+            || gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes "GCC backports, see SHA256SUMS-* for checksums."
+          cat out/${{ matrix.dist }}/*/SHA256SUMS > SHA256SUMS-${{ matrix.dist }}
+          gh release upload "$GITHUB_REF_NAME" out/${{ matrix.dist }}/*/*.deb out/${{ matrix.dist }}/*/*.buildinfo.txt \
+            SHA256SUMS-${{ matrix.dist }} --clobber

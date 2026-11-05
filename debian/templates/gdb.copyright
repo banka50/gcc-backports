@@ -1,0 +1,11 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Comment:
+ This package is an unmodified build of the upstream GDB release tarball.
+ Full licence texts are installed next to this file.
+
+Files: *
+Copyright: Free Software Foundation, Inc.
+License: GPL-3+
+ GDB is distributed under the GNU General Public License version 3 or
+ later. On Debian systems the GPL-3 text is also in
+ /usr/share/common-licenses/GPL-3.

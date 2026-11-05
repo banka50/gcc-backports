@@ -1,0 +1,30 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Comment:
+ This package is an unmodified build of upstream release tarballs.
+ Full licence texts for GCC are installed next to this file
+ (COPYING, COPYING3, COPYING.LIB, COPYING3.LIB, COPYING.RUNTIME).
+ .
+ The compiler executables (cc1, cc1plus, f951, lto1) statically include
+ GMP, MPFR and MPC (GNU LGPL version 3 or later, Free Software
+ Foundation, Inc.) and isl (MIT licence, Sven Verdoolaege and others).
+
+Files: *
+Copyright: Free Software Foundation, Inc.
+License: GPL-3+ with GCC-Runtime-Library-Exception
+ GCC is distributed under the GNU General Public License version 3 or
+ later. The runtime libraries (libgcc, libstdc++, libgfortran, libgomp,
+ libquadmath, libatomic, libitm, sanitizer runtimes and others) carry the
+ GCC Runtime Library Exception, version 3.1 (see COPYING.RUNTIME), which
+ allows them to be linked into programs under any licence.
+ .
+ On Debian systems the GPL-3 text is also in /usr/share/common-licenses/GPL-3.
+
+Files: @PREFIX_REL@/bin/as @PREFIX_REL@/bin/ld @PREFIX_REL@/bin/ld.bfd
+ @PREFIX_REL@/bin/ar @PREFIX_REL@/bin/nm @PREFIX_REL@/bin/objcopy
+ @PREFIX_REL@/bin/objdump @PREFIX_REL@/bin/ranlib @PREFIX_REL@/bin/readelf
+ @PREFIX_REL@/bin/size @PREFIX_REL@/bin/strings @PREFIX_REL@/bin/strip
+ @PREFIX_REL@/bin/addr2line @PREFIX_REL@/bin/c++filt @PREFIX_REL@/bin/elfedit
+ @PREFIX_REL@/bin/gprof @PREFIX_REL@/x86_64-linux-gnu/*
+Copyright: Free Software Foundation, Inc.
+License: GPL-3+
+ GNU binutils, GNU General Public License version 3 or later.

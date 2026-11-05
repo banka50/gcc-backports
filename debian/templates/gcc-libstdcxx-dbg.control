@@ -1,0 +1,17 @@
+Package: @LIBDBG_PKG@
+Version: @VERSION@
+Architecture: amd64
+Maintainer: @MAINTAINER@
+Depends: @PKG_NAME@ (= @VERSION@)
+Section: debug
+Priority: optional
+Homepage: https://gcc.gnu.org/
+Description: GNU Standard C++ Library @GCC_VERSION@ (debug build) for @PKG_NAME@
+ A second build of libstdc++ compiled with -g3 -O0 -D_GLIBCXX_ASSERTIONS,
+ with its debug information kept in place, installed in @PREFIX@/lib64/debug.
+ Use it to step through the standard library in a debugger:
+ .
+   g++-@MAJOR@ -g app.cpp -Wl,-rpath,@PREFIX@/lib64/debug
+ .
+ or run an existing program with LD_LIBRARY_PATH=@PREFIX@/lib64/debug.
+ Debug symbols for the regular, optimised libstdc++ are in @PKG_NAME@-dbgsym.

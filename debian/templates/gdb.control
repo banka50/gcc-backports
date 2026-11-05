@@ -1,0 +1,19 @@
+Package: @PKG_NAME@
+Version: @VERSION@
+Architecture: amd64
+Maintainer: @MAINTAINER@
+Depends: @SHLIBS_DEPENDS@
+Suggests: @PKG_NAME@-dbgsym
+Section: devel
+Priority: optional
+Homepage: https://www.sourceware.org/gdb/
+Description: GNU Debugger @GDB_VERSION@ for @DIST_PRETTY@, installed in @PREFIX@
+ GDB @GDB_VERSION@ with Python, TUI, XML target descriptions and LZMA
+ mini-debuginfo support, built on @DIST_PRETTY@ and installed into
+ @PREFIX@. It fully understands DWARF 5, which current GCC versions emit by
+ default. The system gdb is left untouched.
+ .
+ Call it as @PREFIX@/bin/gdb, or put @PREFIX@/bin on PATH. Separate debug
+ info is looked up in /usr/lib/debug, and auto-load scripts such as the
+ libstdc++ pretty-printers of every gcc-N-opt package are loaded from
+ /usr/share/gdb/auto-load.
