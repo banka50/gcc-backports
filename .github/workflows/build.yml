@@ -22,7 +22,7 @@ jobs:
     # 4-core runner may not fit; use a larger or self-hosted runner then.
     timeout-minutes: 355
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Free disk space
         # A GCC build needs ~25 GB; the stock runner image leaves less than that.
@@ -34,7 +34,7 @@ jobs:
       - name: Build
         run: make DIST=${{ matrix.dist }} TOOLCHAIN=${{ matrix.toolchain }}
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: gcc-backports-${{ matrix.dist }}-${{ matrix.toolchain }}
@@ -53,9 +53,9 @@ jobs:
         dist: [buster, trixie]
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           pattern: gcc-backports-${{ matrix.dist }}-*
           path: artifacts
