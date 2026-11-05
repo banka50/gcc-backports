@@ -1,7 +1,12 @@
+# check=skip=InvalidDefaultArgInFrom
 # Build environment: a pristine distribution image plus the packages GCC,
 # binutils and GDB need to build. The base image is pinned by digest and the
 # apt sources are frozen (see dists/<codename>/), so this image comes out
 # the same every time it is built.
+#
+# DIST_IMAGE deliberately has no default: the Makefile always passes the
+# digest from dists/<codename>/dist.env, and a fallback image would let a
+# bare `docker build` succeed on the wrong base. Hence the check skipped above.
 ARG DIST_IMAGE
 FROM ${DIST_IMAGE}
 
