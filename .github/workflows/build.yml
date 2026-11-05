@@ -77,8 +77,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          # Both test jobs get here at about the same time: if the other one
+          # created the release first, `create` fails and `view` confirms it.
           gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \
-            || gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes "GCC backports, see SHA256SUMS-* for checksums."
+            || gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes "GCC backports, see SHA256SUMS-* for checksums." \
+            || gh release view "$GITHUB_REF_NAME" >/dev/null
           cat out/${{ matrix.dist }}/*/SHA256SUMS > SHA256SUMS-${{ matrix.dist }}
           gh release upload "$GITHUB_REF_NAME" out/${{ matrix.dist }}/*/*.deb out/${{ matrix.dist }}/*/*.buildinfo.txt \
             SHA256SUMS-${{ matrix.dist }} --clobber
