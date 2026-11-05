@@ -280,5 +280,9 @@ its `sources.list` (and the image digest in `dist.env`), then rebuild.
 
 ## Licence
 
-GCC, binutils and GDB are GPL-3.0-or-later; GCC's runtime libraries carry the GCC
-Runtime Library Exception. See `/usr/share/doc/<package>/` in each package.
+The build scripts, templates and tests in this repository are MIT-licensed; see
+[`LICENSE`](LICENSE).
+
+The packages they produce contain GCC, binutils and GDB, which are
+GPL-3.0-or-later; GCC's runtime libraries carry the GCC Runtime Library
+Exception. See `/usr/share/doc/<package>/copyright` in each package.
